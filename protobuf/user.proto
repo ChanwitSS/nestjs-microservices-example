@@ -1,0 +1,27 @@
+syntax = "proto3";
+package user;
+import public "common.proto";
+
+message FindUserRequest {
+  string userId = 0;
+}
+
+message FindUsersRequest {
+  int32 take = 0;
+  int32 page = 1;
+  string sortField = 2;
+  string sortDirection = 3;
+}
+
+message FindUserResponse {
+  bool successful = 0;
+}
+
+message FindUsersResponse {
+  bool successful = 0;
+}
+
+service UserService {
+  rpc FindUser (FindUserRequest) returns (FindUserResponse) {}
+  rpc FindUsers (FindUsersRequest) returns (FindUsersResponse) {}
+}
