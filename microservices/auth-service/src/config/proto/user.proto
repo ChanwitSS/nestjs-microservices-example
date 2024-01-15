@@ -1,0 +1,57 @@
+syntax = "proto3";
+package user;
+import public "common.proto";
+
+message User {
+  string name = 0;
+  string email = 1;
+}
+
+message FindOneRequest {
+  string userId = 0;
+}
+
+message FindOneResponse {
+  bool successful = 0;
+  User data = 1;
+}
+
+message FindAllRequest {
+  int32 take = 0;
+  int32 page = 1;
+  string sortField = 2;
+  string sortDirection = 3;
+}
+
+message FindAllResponse {
+  bool successful = 0;
+  repeated User data = 4;
+}
+
+message CreateRequest {
+  string name = 0;
+  string email = 1;
+}
+
+message CreateResponse {
+  bool successful = 0;
+  User data = 1;
+}
+
+message UpdateRequest {
+  string id = 0;
+  string name = 1;
+  string email = 2;
+}
+
+message UpdateResponse {
+  bool successful = 0;
+  User data = 1;
+}
+
+service UserService {
+  rpc FindOne (FindOneRequest) returns (FindOneResponse) {}
+  rpc FindAll (FindAllRequest) returns (FindAllResponse) {}
+  rpc Create (CreateRequest) returns (CreateResponse) {}
+  rpc Update (UpdateRequest) returns (UpdateResponse) {}
+}

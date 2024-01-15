@@ -30,12 +30,11 @@ export class UserService {
     return await this.userRepository.findOne({ where: { id } });
   }
 
-  // async create(input: any): Promise<User> {
-  //   return await this.userRepository.save({
-  //     ...input,
-  //     password: await hashPassword(input.password),
-  //   });
-  // }
+  async create(input: any): Promise<User> {
+    return await this.userRepository.create({
+      ...input,
+    });
+  }
 
   async update(id: string, input: any): Promise<any> {
     return await this.userRepository.update({ id }, input);

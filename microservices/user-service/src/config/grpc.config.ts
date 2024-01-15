@@ -5,7 +5,7 @@ const protoDir = join(__dirname, '/', 'proto');
 export const grpcClientConfig: ClientOptions = {
   transport: Transport.GRPC,
   options: {
-    url: '0.0.0.0:50051',
+    url: '0.0.0.0:50052',
     loader: {
       keepCase: true,
       longs: Number,

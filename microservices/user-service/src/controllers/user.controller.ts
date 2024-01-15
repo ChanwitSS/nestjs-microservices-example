@@ -9,13 +9,24 @@ export class UserController {
 
   @GrpcMethod('UserService', 'FindOne')
   findOne(request: any, metadata: Metadata): Promise<any> {
-    const { userId } = request;
-    return this.userService.findOne(userId);
+    const { id } = request;
+    return this.userService.findOne(id);
   }
 
   @GrpcMethod('UserService', 'FindAll')
   findAll(request: any, metadata: Metadata): Promise<any> {
-    const { take, page, sortField, sortDirection } = request;
+    const { take, page, sortField, sortDirection, filter } = request;
     return this.userService.findAll({ take, page, sortField, sortDirection });
+  }
+
+  @GrpcMethod('UserService', 'Create')
+  create(request: any, metadata: Metadata): Promise<any> {
+    return this.userService.create({ ...request });
+  }
+
+  @GrpcMethod('UserService', 'Update')
+  update(request: any, metadata: Metadata): Promise<any> {
+    const { id, body } = request;
+    return this.userService.update(id, { ...body });
   }
 }
