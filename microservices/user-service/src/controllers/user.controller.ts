@@ -7,16 +7,16 @@ import { UserService } from 'src/services/user.service';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @GrpcMethod('UserService', 'FindOne')
-  findOne(request: any, metadata: Metadata): Promise<any> {
-    const { id } = request;
-    return this.userService.findOne(id);
-  }
-
   @GrpcMethod('UserService', 'FindAll')
   findAll(request: any, metadata: Metadata): Promise<any> {
     const { take, page, sortField, sortDirection, filter } = request;
     return this.userService.findAll({ take, page, sortField, sortDirection });
+  }
+
+  @GrpcMethod('UserService', 'FindOne')
+  findOne(request: any, metadata: Metadata): Promise<any> {
+    const { id } = request;
+    return this.userService.findOne(id);
   }
 
   @GrpcMethod('UserService', 'Create')

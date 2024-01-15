@@ -12,3 +12,13 @@ export const grpcAuthClientConfig: ClientProviderOptions = {
     protoPath: [join(protoDir, '/auth.proto')],
   },
 };
+
+export const grpcUserClientConfig: ClientProviderOptions = {
+  name: 'USER_PACKAGE',
+  transport: Transport.GRPC,
+  options: {
+    url: '0.0.0.0:50052',
+    package: ['user'],
+    protoPath: [join(protoDir, '/user.proto')],
+  },
+};
