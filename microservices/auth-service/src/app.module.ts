@@ -5,13 +5,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { grpcUserClientConfig } from './config/grpc.config';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig, jwtConstants } from './config/auth.config';
+import { AuthController } from './controller/auth.controller';
+import { AuthService } from './services';
+import { JwtService } from './services/jwt.service';
 
 @Module({
   imports: [
     JwtModule.register(jwtConfig),
     ClientsModule.register([grpcUserClientConfig]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, AuthController],
+  providers: [AppService, AuthService, JwtService],
 })
 export class AppModule {}

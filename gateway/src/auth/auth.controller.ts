@@ -7,25 +7,27 @@ import {
   Put,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+} from './auth.pb';
+import { Observable } from 'rxjs';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('test')
-  test() {
-    return this.authService.test();
+  @Post('register')
+  async register(
+    @Body() body: RegisterRequest,
+  ): Promise<Observable<RegisterResponse>> {
+    return this.authService.register(body);
   }
 
-  //   @Post('register')
-  //   async register(
-  //     @Body() body: RegisterRequest,
-  //   ): Promise<Observable<RegisterResponse>> {
-  //     return this.svc.register(body);
-  //   }
-
-  //   @Put('login')
-  //   async login(@Body() body: LoginRequest): Promise<Observable<LoginResponse>> {
-  //     return this.svc.login(body);
-  //   }
+  @Post('login')
+  async login(@Body() body: LoginRequest): Promise<Observable<LoginResponse>> {
+    return this.authService.login(body);
+  }
 }

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 import { JwtService as Jwt } from '@nestjs/jwt';
 import { AuthDto } from 'src/dto/auth.dto';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -8,7 +7,7 @@ import { UserServiceClient } from 'src/pb';
 @Injectable()
 export class JwtService {
   private readonly jwt: Jwt;
-  private grpcUserClient: UserServiceClient;
+  private userServiceClient: UserServiceClient;
 
   constructor(
     jwt: Jwt,
@@ -18,7 +17,7 @@ export class JwtService {
   }
 
   onModuleInit() {
-    this.grpcUserClient =
+    this.userServiceClient =
       this.client.getService<UserServiceClient>('UserService');
   }
 
@@ -27,25 +26,9 @@ export class JwtService {
     return this.jwt.decode(token, null);
   }
 
-  public async validateUser({ id }): Promise<AuthDto> {
-    return this.grpcUserClient.findOne({ id });
-  }
-
   // Generate JWT Token
   public generateToken({ id, email }): string {
     return this.jwt.sign({ id, email });
-  }
-
-  // Validate User's password
-  public isPasswordValid(password: string, userPassword: string): boolean {
-    return bcrypt.compareSync(password, userPassword);
-  }
-
-  // Encode User's password
-  public encodePassword(password: string): string {
-    const salt: string = bcrypt.genSaltSync(10);
-
-    return bcrypt.hashSync(password, salt);
   }
 
   // Validate JWT Token, throw forbidden error if JWT Token is invalid

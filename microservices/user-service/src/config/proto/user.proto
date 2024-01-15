@@ -3,55 +3,56 @@ package user;
 import public "common.proto";
 
 message User {
-  string name = 0;
+  string id = 0;
+  string email = 1;
+  string password = 2;
+  string name = 3;
+}
+
+message FindOneUserRequest {
+  string id = 0;
   string email = 1;
 }
 
-message FindOneRequest {
-  string userId = 0;
-}
-
-message FindOneResponse {
+message FindOneUserResponse {
   bool successful = 0;
   User data = 1;
 }
 
-message FindAllRequest {
+message FindAllUserRequest {
   int32 take = 0;
   int32 page = 1;
   string sortField = 2;
   string sortDirection = 3;
 }
 
-message FindAllResponse {
+message FindAllUserResponse {
   bool successful = 0;
   repeated User data = 4;
 }
 
-message CreateRequest {
-  string name = 0;
-  string email = 1;
+message CreateUserRequest {
+  User data = 0;
 }
 
-message CreateResponse {
+message CreateUserResponse {
   bool successful = 0;
   User data = 1;
 }
 
-message UpdateRequest {
+message UpdateUserRequest {
   string id = 0;
-  string name = 1;
-  string email = 2;
+  User data = 1;
 }
 
-message UpdateResponse {
+message UpdateUserResponse {
   bool successful = 0;
   User data = 1;
 }
 
 service UserService {
-  rpc FindOne (FindOneRequest) returns (FindOneResponse) {}
-  rpc FindAll (FindAllRequest) returns (FindAllResponse) {}
-  rpc Create (CreateRequest) returns (CreateResponse) {}
-  rpc Update (UpdateRequest) returns (UpdateResponse) {}
+  rpc FindOne (FindOneUserRequest) returns (FindOneUserResponse) {}
+  rpc FindAll (FindAllUserRequest) returns (FindAllUserResponse) {}
+  rpc Create (CreateUserRequest) returns (CreateUserResponse) {}
+  rpc Update (UpdateUserRequest) returns (UpdateUserResponse) {}
 }

@@ -1,7 +1,19 @@
 import { Observable } from 'rxjs';
-import { BaseServiceClient } from './base.pb';
+import {
+  CreateRequest,
+  CreateResponse,
+  DeleteRequest,
+  DeleteResponse,
+  FindAllRequest,
+  FindAllResponse,
+  FindOneRequest,
+  FindOneResponse,
+  UpdateRequest,
+  UpdateResponse,
+} from './base.pb';
 
 export const protobufPackage = 'user';
+export const USER_PACKAGE_NAME = 'user';
 export const USER_SERVICE_NAME = 'UserService';
 
 export interface User {
@@ -10,32 +22,50 @@ export interface User {
   password: number;
 }
 
-export interface RegisterResponse {
-  status: number;
-  error: string[];
+export interface FindAllUserRequest extends FindAllRequest {
+  filter?: any;
 }
-
-export interface LoginRequest {
-  email: string;
-  password: string;
+export interface FindAllUserResponse extends FindAllResponse<User> {}
+export interface FindOneUserRequest extends FindOneRequest {
+  email?: string;
 }
+export interface FindOneUserResponse extends FindOneResponse<User> {}
+export interface CreateUserRequest extends CreateRequest<User> {}
+export interface CreateUserResponse extends CreateResponse<User> {}
+export interface UpdateUserRequest extends UpdateRequest<User> {}
+export interface UpdateUserResponse extends UpdateResponse<User> {}
+export interface DeleteUserRequest extends DeleteRequest {}
+export interface DeleteUserResponse extends DeleteResponse {}
 
-export interface LoginResponse {
-  status: number;
-  error: string[];
-  token: string;
+export interface UserServiceClient {
+  findAll(
+    request: FindAllUserRequest,
+  ):
+    | Promise<FindAllUserResponse>
+    | Observable<FindAllUserResponse>
+    | FindAllUserResponse;
+  findOne(
+    request: FindOneUserRequest,
+  ):
+    | Promise<FindOneUserResponse>
+    | Observable<FindOneUserResponse>
+    | FindOneUserResponse;
+  create(
+    request: CreateUserRequest,
+  ):
+    | Promise<CreateUserResponse>
+    | Observable<CreateUserResponse>
+    | CreateUserResponse;
+  update(
+    request: UpdateUserRequest,
+  ):
+    | Promise<UpdateUserResponse>
+    | Observable<UpdateUserResponse>
+    | UpdateUserResponse;
+  delete(
+    request: DeleteUserRequest,
+  ):
+    | Promise<DeleteUserResponse>
+    | Observable<DeleteUserResponse>
+    | DeleteUserResponse;
 }
-
-export interface ValidateRequest {
-  token: string;
-}
-
-export interface ValidateResponse {
-  status: number;
-  error: string[];
-  userId: number;
-}
-
-export const AUTH_PACKAGE_NAME = 'auth';
-
-export interface UserServiceClient extends BaseServiceClient<User> {}

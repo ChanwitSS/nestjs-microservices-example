@@ -14,30 +14,33 @@ export class UserService {
     page,
     sortField,
     sortDirection,
+    filter,
   }: any): Promise<User[]> {
     const limit = take || 10;
-    const offset = ((page || 1) - 1) * take;
+    const offset = ((page || 1) - 1) * limit;
+
     return await this.userRepository.findAll({
-      where: {},
+      // where: {},
       limit,
       offset,
-      // sort obj must coming into array of object such as [sort1, sort2] by sort1 and sort2 is object contain sortField and sortDirection
-      order: [[sortField, sortDirection]],
+      // order: [[sortField, sortDirection]],
     });
   }
 
-  async findOne(id: string): Promise<User> {
-    return await this.userRepository.findOne({ where: { id } });
+  async findOne({ id, email }): Promise<User> {
+    return await this.userRepository.findOne({
+      where: { ...(id ? { id } : {}), ...(email ? { email } : {}) },
+    });
   }
 
-  async create(input: any): Promise<User> {
+  async create(data: any): Promise<User> {
     return await this.userRepository.create({
-      ...input,
+      ...data,
     });
   }
 
-  async update(id: string, input: any): Promise<any> {
-    return await this.userRepository.update({ id }, input);
+  async update(id: string, data: any): Promise<any> {
+    return await this.userRepository.update({ id }, data);
   }
 
   //   async delete(id: number): Promise<any> {

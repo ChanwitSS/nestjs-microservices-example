@@ -1,4 +1,6 @@
 import {
+  ConflictException,
+  ForbiddenException,
   HttpStatus,
   Inject,
   Injectable,
@@ -6,11 +8,13 @@ import {
 } from '@nestjs/common';
 import { JwtService } from './jwt.service';
 import { ClientGrpc } from '@nestjs/microservices';
-import { UserServiceClient } from 'src/pb';
+import { User, UserServiceClient } from 'src/pb';
+import * as bcrypt from 'bcryptjs';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService {
-  private grpcUserClient: UserServiceClient;
+  private userServiceClient: UserServiceClient;
 
   constructor(
     @Inject('USER_PACKAGE') private client: ClientGrpc,
@@ -18,69 +22,69 @@ export class AuthService {
   ) {}
 
   onModuleInit() {
-    this.grpcUserClient =
+    this.userServiceClient =
       this.client.getService<UserServiceClient>('UserService');
+  }
+
+  public async validateUser({ id }): Promise<any> {
+    return await firstValueFrom(this.userServiceClient.findOne({ id }));
+  }
+
+  public isPasswordValid(password: string, userPassword: string): boolean {
+    return bcrypt.compareSync(password, userPassword);
+  }
+
+  public encodePassword(password: string): string {
+    const salt: string = bcrypt.genSaltSync(10);
+
+    return bcrypt.hashSync(password, salt);
   }
 
   async validate(token: string): Promise<any> {
     const decoded = await this.jwtService.verify(token);
-    if (!decoded) {
-      return {
-        status: HttpStatus.FORBIDDEN,
-        error: ['Token is invalid'],
-        userId: null,
-      };
-    }
+    if (!decoded) throw new UnauthorizedException('Invalid Token!');
+    const auth = await this.validateUser(decoded);
+    if (!auth) throw new ConflictException('User not found!');
 
-    const auth = await this.jwtService.validateUser(decoded);
-    if (!auth) {
-      return {
-        status: HttpStatus.CONFLICT,
-        error: ['User not found'],
-        userId: null,
-      };
-    }
-
-    return { status: HttpStatus.OK, error: null, userId: decoded.id };
+    return decoded.id;
   }
 
-  public async register({ email, password }: any): Promise<any> {
-    const user = this.grpcUserClient.findOne({ email });
-
-    if (user) {
-      return { status: HttpStatus.CONFLICT, error: ['E-Mail already exists'] };
-    }
+  async register(data: User): Promise<any> {
+    const { email, password } = data;
+    const { data: user } = await firstValueFrom(
+      this.userServiceClient.findOne({ email }),
+    );
+    if (user) throw new ConflictException('Email already exist!');
 
     try {
-      // await this.repository.save({
-      //   email,
-      //   password: this.jwtService.encodePassword(password)
-      // });
-      const craeted = this.grpcUserClient.create({
-        email,
-        password: this.jwtService.encodePassword(password),
-      });
-    } catch (err) {
-      return { status: HttpStatus.INTERNAL_SERVER_ERROR, error: [...err] };
-    }
+      const createdUser = await firstValueFrom(
+        this.userServiceClient.create({
+          data: {
+            email,
+            password: this.encodePassword(password),
+          },
+        }),
+      );
 
-    return { status: HttpStatus.CREATED, error: null };
+      return createdUser;
+    } catch (err) {
+      return err;
+    }
   }
 
-  // async signIn(username: string, pass: string): Promise<any> {
-  //   const user = await this.client.findOne(username);
-  //   if (user?.password !== pass) {
-  //     throw new UnauthorizedException();
-  //   }
-  //   const { password, ...result } = user;
-  //   // TODO: Generate a JWT and return it here
-  //   // instead of the user object
-  //   return result;
-  // }
-  // async register(username: string, password: string): Promise<any> {
-  //   const payload = { sub: user.userId, username: user.username };
-  //   return {
-  //     access_token: await this.jwtService.signAsync(payload),
-  //   };
-  // }
+  async login({ email, password }) {
+    try {
+      const { data: user } = await firstValueFrom(
+        this.userServiceClient.findOne({ email }),
+      );
+
+      if (this.isPasswordValid(password, user.password))
+        return this.jwtService.generateToken({
+          id: user.id,
+          email: user.email,
+        });
+    } catch (err) {
+      return err;
+    }
+  }
 }

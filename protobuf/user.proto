@@ -2,26 +2,57 @@ syntax = "proto3";
 package user;
 import public "common.proto";
 
-message FindUserRequest {
-  string userId = 0;
+message User {
+  string id = 0;
+  string email = 1;
+  string password = 2;
+  string name = 3;
 }
 
-message FindUsersRequest {
+message FindOneUserRequest {
+  string id = 0;
+  string email = 1;
+}
+
+message FindOneUserResponse {
+  bool successful = 0;
+  User data = 1;
+}
+
+message FindAllUserRequest {
   int32 take = 0;
   int32 page = 1;
   string sortField = 2;
   string sortDirection = 3;
 }
 
-message FindUserResponse {
+message FindAllUserResponse {
   bool successful = 0;
+  repeated User data = 4;
 }
 
-message FindUsersResponse {
+message CreateUserRequest {
+  User data = 0;
+}
+
+message CreateUserResponse {
   bool successful = 0;
+  User data = 1;
+}
+
+message UpdateUserRequest {
+  string id = 0;
+  User data = 1;
+}
+
+message UpdateUserResponse {
+  bool successful = 0;
+  User data = 1;
 }
 
 service UserService {
-  rpc FindUser (FindUserRequest) returns (FindUserResponse) {}
-  rpc FindUsers (FindUsersRequest) returns (FindUsersResponse) {}
+  rpc FindOne (FindOneUserRequest) returns (FindOneUserResponse) {}
+  rpc FindAll (FindAllUserRequest) returns (FindAllUserResponse) {}
+  rpc Create (CreateUserRequest) returns (CreateUserResponse) {}
+  rpc Update (UpdateUserRequest) returns (UpdateUserResponse) {}
 }

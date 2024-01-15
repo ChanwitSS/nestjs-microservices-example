@@ -15,34 +15,23 @@ import {
 export class AuthService {
   private authServiceClient: AuthServiceClient;
 
-  @Inject('AUTH_PACKAGE')
-  private readonly client: ClientGrpc;
+  constructor(@Inject('AUTH_PACKAGE') private client: ClientGrpc) {}
 
-  public onModuleInit(): void {
+  onModuleInit() {
     this.authServiceClient =
       this.client.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
   }
 
-  test() {
-    const res = this.authServiceClient.register({
-      email: 'tan',
-      password: 'tan',
-    });
-    console.log('here ', res);
-    return res;
-  }
-
-  async register(body: RegisterRequest): Promise<Observable<RegisterResponse>> {
+  register(body: RegisterRequest): Observable<RegisterResponse> {
     return this.authServiceClient.register(body);
   }
 
-  async login(body: LoginRequest): Promise<Observable<LoginResponse>> {
+  login(body: LoginRequest): Observable<LoginResponse> {
     return this.authServiceClient.login(body);
   }
 
-  async validate(token: string): Promise<ValidateResponse> {
-    const res = this.authServiceClient.validate({ token });
-    console.log(res);
-    return firstValueFrom(this.authServiceClient.validate({ token }));
+   async validate(token: string): Promise<ValidateResponse> {
+    console.log(await firstValueFrom(this.authServiceClient.validate({ token })))
+    return await firstValueFrom(this.authServiceClient.validate({ token }));
   }
 }

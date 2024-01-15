@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 
 export const protobufPackage = 'auth';
+export const AUTH_PACKAGE_NAME = 'auth';
 export const AUTH_SERVICE_NAME = 'AuthService';
 
 export interface RegisterRequest {
@@ -31,19 +32,11 @@ export interface ValidateRequest {
 export interface ValidateResponse {
   status: number;
   error: string[];
-  userId: number;
+  id: number;
 }
-
-export const AUTH_PACKAGE_NAME = 'auth';
 
 export interface AuthServiceClient {
   register(request: RegisterRequest): Observable<RegisterResponse>;
   login(request: LoginRequest): Observable<LoginResponse>;
   validate(request: ValidateRequest): Observable<ValidateResponse>;
 }
-
-// export interface AuthServiceController {
-//   register(request: RegisterRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
-//   login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
-//   validate(request: ValidateRequest): Promise<ValidateResponse> | Observable<ValidateResponse> | ValidateResponse;
-// }

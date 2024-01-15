@@ -1,5 +1,5 @@
 import { Metadata } from '@grpc/grpc-js';
-import { Controller } from '@nestjs/common';
+import { Controller, HttpStatus } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { UserService } from 'src/services/user.service';
 
@@ -8,25 +8,83 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @GrpcMethod('UserService', 'FindAll')
-  findAll(request: any, metadata: Metadata): Promise<any> {
+  async findAll(request: any, metadata: Metadata) {
     const { take, page, sortField, sortDirection, filter } = request;
-    return this.userService.findAll({ take, page, sortField, sortDirection });
+
+    try {
+      const users = await this.userService.findAll({
+        take,
+        page,
+        sortField,
+        sortDirection,
+        filter,
+      });
+
+      return {
+        successful: true,
+        data: users,
+      };
+    } catch (err) {
+      return {
+        successful: false,
+        error: err,
+      };
+    }
   }
 
   @GrpcMethod('UserService', 'FindOne')
-  findOne(request: any, metadata: Metadata): Promise<any> {
-    const { id } = request;
-    return this.userService.findOne(id);
+  async findOne(request: any, metadata: Metadata): Promise<any> {
+    try {
+      const user = await this.userService.findOne({ ...request });
+
+      return {
+        successful: true,
+        data: user,
+      };
+    } catch (err) {
+      return {
+        successful: false,
+        error: err,
+      };
+    }
   }
 
   @GrpcMethod('UserService', 'Create')
-  create(request: any, metadata: Metadata): Promise<any> {
-    return this.userService.create({ ...request });
+  async create(request: any, metadata: Metadata): Promise<any> {
+    const { data } = request;
+    console.log(data)
+    try {
+      const user = await this.userService.create({ ...data });
+
+      return {
+        successful: true,
+        data: user,
+      };
+    } catch (err) {
+      console.log(err)
+      return {
+        successful: false,
+        error: err,
+      };
+    }
   }
 
   @GrpcMethod('UserService', 'Update')
-  update(request: any, metadata: Metadata): Promise<any> {
-    const { id, body } = request;
-    return this.userService.update(id, { ...body });
+  async update(request: any, metadata: Metadata): Promise<any> {
+    const { id, data } = request;
+
+    try {
+      const user = await this.userService.update(id, { ...data });
+
+      return {
+        successful: true,
+        data: user,
+      };
+    } catch (err) {
+      return {
+        successful: false,
+        error: err,
+      };
+    }
   }
 }

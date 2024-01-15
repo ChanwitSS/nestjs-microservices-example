@@ -11,12 +11,4 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  @GrpcMethod('AuthService', 'Register')
-  async findOne(request: any, metadata: Metadata): Promise<any> {
-    return {
-      status: 200,
-      error: null,
-    };
-  }
 }
