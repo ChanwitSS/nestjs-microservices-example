@@ -1,6 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { encodePassword, isPasswordValid } from 'src/utils/password.util';
+import { AuthModule } from 'src/auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { Observable } from 'rxjs';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -16,8 +21,9 @@ describe('UserController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService],
+      imports: [AuthModule],
       controllers: [UserController],
+      providers: [UserService],
     })
       .overrideProvider(UserService)
       .useValue(mockUserService)
@@ -31,33 +37,34 @@ describe('UserController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('#register', () => {
+  describe('#findAll', () => {
     beforeEach(() => {
-      jest.spyOn(service, 'register');
+      jest.spyOn(service, 'findAll');
     });
 
     it('should be defined', () => {
-      expect(service.register).toBeDefined();
+      expect(service.findAll).toBeDefined();
     });
 
-    it('should call service.register', () => {
-      controller.register({ email: 'test@gmail.com', password: 'password' });
-      expect(service.register).toHaveBeenCalledTimes(1);
+    it('should call service.findAll', () => {
+      // controller.findAll();
+      expect(service.findAll).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('#login', () => {
+  describe('#findOne', () => {
     beforeEach(() => {
-      jest.spyOn(service, 'login');
+      jest.spyOn(service, 'findOne');
     });
 
     it('should be defined', () => {
-      expect(service.login).toBeDefined();
+      expect(service.findAll).toBeDefined();
     });
 
-    it('should call service.get', () => {
-      controller.login({ email: 'test@gmail.com', password: 'password' });
-      expect(service.login).toHaveBeenCalledTimes(1);
+    it('should call service.findOne', () => {
+      const id = 'e165354e-cc07-44f4-9185-f79d39747485'
+      controller.findOne(id);
+      expect(service.findOne).toHaveBeenCalledTimes(1);
     });
   });
 });

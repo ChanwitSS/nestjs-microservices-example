@@ -9,7 +9,7 @@ export class UserController {
 
   @GrpcMethod('UserService', 'FindAll')
   async findAll(request: any, metadata: Metadata) {
-    const { take, page, sortField, sortDirection, filter } = request;
+    const { take, page, sortField, sortDirection, search } = request;
 
     try {
       const users = await this.userService.findAll({
@@ -17,7 +17,7 @@ export class UserController {
         page,
         sortField,
         sortDirection,
-        filter,
+        search,
       });
 
       return {
@@ -72,7 +72,7 @@ export class UserController {
     const { id } = request;
     try {
       const user = await this.userService.update(id, { ...request });
-      console.log(user)
+
       return {
         successful: true,
         data: user,

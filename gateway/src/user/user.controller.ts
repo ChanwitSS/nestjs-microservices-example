@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { UpdateUserDto, CreateUserDto, UserDto } from 'src/user/user.dto';
+import { UpdateUserDto, CreateUserDto, UserQueryDto } from 'src/user/user.dto';
 import { UserService } from 'src/user/user.service';
 
 @Controller('user')
@@ -21,14 +21,14 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  findAll(@Query() query: any) {
-    const { take, page, sortField, sortDirection, filter } = query;
+  findAll(@Query() query: UserQueryDto) {
+    const { take, page, sortField, sortDirection, search } = query;
     return this.userService.findAll({
       take: +take,
       page: +page,
       sortField,
       sortDirection,
-      filter,
+      search,
     });
   }
 
@@ -45,5 +45,10 @@ export class UserController {
   @Put('/:id')
   update(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return this.userService.update(id, { ...body });
+  }
+
+  @Get('/find-by-text/:text')
+  findByText(@Param('text') text: string) {
+    return this.userService.findByText(text);
   }
 }

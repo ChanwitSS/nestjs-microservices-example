@@ -16,7 +16,7 @@ export interface FindAllUserRequest {
   page?: number;
   sortField?: string;
   sortDirection?: string;
-  filter?: any;
+  search?: string;
 }
 export interface FindAllUserResponse {
   status: number;

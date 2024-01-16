@@ -21,18 +21,22 @@ export class UserService {
       this.client.getService<UserServiceClient>('UserService');
   }
 
-  async findAll({ take, page, sortField, sortDirection, filter }) {
+  async findAll({ take, page, sortField, sortDirection, search }) {
     return this.userServiceClient.findAll({
       take,
       page,
       sortField,
       sortDirection,
-      filter,
+      search,
     });
   }
 
   async findOne(id: string) {
     return this.userServiceClient.findOne({ id });
+  }
+
+  async findByText(text: string) {
+    return this.userServiceClient.findAll({ search: text });
   }
 
   async create(data: any) {
@@ -44,7 +48,7 @@ export class UserService {
 
       if (user) throw new ConflictException('Email already exist!');
 
-      const {  data: createdUser } = await firstValueFrom(
+      const { data: createdUser } = await firstValueFrom(
         this.userServiceClient.create({
           email,
           password: encodePassword(password),

@@ -10,8 +10,14 @@ services:
     environment:
       TZ: Asia/Bangkok
       LOGGING: "true"
+      LOGGING_DISPLAY_SQL: "true"
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: user
+      DB_HOST: postgres
+      DB_PORT: 5432
     ports:
-      - 3000:3000
+      - 50051:50051
     logging:
       options:
         max-size: "10m"
@@ -19,6 +25,8 @@ services:
     networks:
       - default
       - microservice-link
+    depends_on:
+      - "postgres"
   postgres:
     image: postgres:16-alpine
     container_name: user-postgres

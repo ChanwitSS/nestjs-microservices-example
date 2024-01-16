@@ -10,8 +10,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const message = exception.message || 'Internal server error';
     const error = exception.error || 'internal_server_error';
 
-    console.log(exception)
-
     response.status(status).json(
       exception.response || {
         status,

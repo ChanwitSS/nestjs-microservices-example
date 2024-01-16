@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { User } from 'src/model/user.model';
 
 @Injectable()
@@ -14,13 +15,15 @@ export class UserService {
     page,
     sortField,
     sortDirection,
-    filter,
+    search,
   }: any): Promise<User[]> {
     const limit = take || 10;
     const offset = ((page || 1) - 1) * limit;
 
     return await this.userRepository.findAll({
-      where: {},
+      where: {
+        ...(search ? { name: { [Op.iLike]: `%${search}%` } } : {}),
+      },
       limit,
       offset,
       // order: [[sortField, sortDirection]],

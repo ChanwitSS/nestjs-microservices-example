@@ -14,3 +14,16 @@ export class CreateUserDto extends OmitType(UserDto, ['id']) {
   password: string;
 }
 export class UpdateUserDto extends CreateUserDto {}
+
+export class UserQueryDto {
+  @ApiProperty({ required: false })
+  take: number;
+  @ApiProperty({ required: false })
+  page: number;
+  @ApiProperty({ required: false })
+  sortField: string;
+  @ApiProperty({ required: false })
+  sortDirection: string;
+  @ApiProperty({ required: false })
+  search: string;
+}

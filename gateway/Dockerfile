@@ -1,12 +1,13 @@
 FROM node:20-alpine
+
 WORKDIR /app
 
-# RUN apk --no-cache add --update --virtual native-deps \
-#   g++ gcc libgcc libstdc++ linux-headers make python3 postgresql-dev
+COPY package*.json ./
 
-# COPY microservice-package.json ./package.json
+RUN npm install
 
-# COPY ./micro-package/node_modules ./node_modules
-RUN npm install node-gyp -g && npm install
+COPY . .
 
-CMD [ "npm", "run", "start" ]
+RUN npm run build
+
+CMD [ "npm", "run", "start:dev" ]

@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { encodePassword, isPasswordValid } from 'src/utils/password.util';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -31,7 +32,7 @@ describe('AuthController', () => {
 
   describe('#register', () => {
     beforeEach(() => {
-      jest.spyOn(service, 'register');
+      jest.spyOn(service, 'register').mockImplementation();
     });
 
     it('should be defined', () => {
