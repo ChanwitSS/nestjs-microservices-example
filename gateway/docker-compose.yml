@@ -6,10 +6,11 @@ services:
     restart: always
     volumes:
       - ./src:/app/src
-      - ../../protobuf:/app/src/_proto
+      - ../protobuf:/app/src/_proto
     environment:
       TZ: Asia/Bangkok
       LOGGING: "true"
+      USER_SERVICE_URL: user-microservice:50052
     ports:
       - 3000:3000
     logging:
