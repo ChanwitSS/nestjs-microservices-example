@@ -1,24 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService as Jwt } from '@nestjs/jwt';
-import { AuthDto } from 'src/dto/auth.dto';
-import { ClientGrpc } from '@nestjs/microservices';
-import { UserServiceClient } from 'src/pb';
 
 @Injectable()
 export class JwtService {
   private readonly jwt: Jwt;
-  private userServiceClient: UserServiceClient;
 
-  constructor(
-    jwt: Jwt,
-    @Inject('USER_PACKAGE') private client: ClientGrpc,
-  ) {
+  constructor(jwt: Jwt) {
     this.jwt = jwt;
-  }
-
-  onModuleInit() {
-    this.userServiceClient =
-      this.client.getService<UserServiceClient>('UserService');
   }
 
   // Decoding the JWT Token
@@ -32,7 +20,7 @@ export class JwtService {
   }
 
   // Validate JWT Token, throw forbidden error if JWT Token is invalid
-  public async verify(token: string): Promise<any> {
+  public async verify(token: string) {
     try {
       return this.jwt.verify(token);
     } catch (err) {}

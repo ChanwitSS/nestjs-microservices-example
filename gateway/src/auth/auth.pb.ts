@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 
 export const protobufPackage = 'auth';

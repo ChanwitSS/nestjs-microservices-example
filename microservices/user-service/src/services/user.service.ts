@@ -20,7 +20,7 @@ export class UserService {
     const offset = ((page || 1) - 1) * limit;
 
     return await this.userRepository.findAll({
-      // where: {},
+      where: {},
       limit,
       offset,
       // order: [[sortField, sortDirection]],
@@ -30,20 +30,29 @@ export class UserService {
   async findOne({ id, email }): Promise<User> {
     return await this.userRepository.findOne({
       where: { ...(id ? { id } : {}), ...(email ? { email } : {}) },
+      raw: true,
     });
   }
 
   async create(data: any): Promise<User> {
-    return await this.userRepository.create({
-      ...data,
-    });
+    return await this.userRepository.create(
+      {
+        ...data,
+      },
+      { returning: true },
+    );
   }
 
-  async update(id: string, data: any): Promise<any> {
-    return await this.userRepository.update({ id }, data);
+  async update(id: string, data: any) {
+    return (
+      await this.userRepository.update(data, {
+        where: { id },
+        returning: true,
+      })
+    )[1][0].dataValues;
   }
 
-  //   async delete(id: number): Promise<any> {
+  //   async delete(id: number) {
   //     return await this.userRepository.delete(id);
   //   }
 }

@@ -30,10 +30,7 @@ export class AuthGuard implements CanActivate {
     }
 
     const token: string = bearer[1];
-
-    const { status, id }: ValidateResponse = await this.service.validate(token);
-
-    if (!id) {
+    if (!await this.service.validate(token)) {
       throw new UnauthorizedException();
     }
 

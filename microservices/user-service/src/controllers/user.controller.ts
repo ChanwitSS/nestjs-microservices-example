@@ -33,7 +33,7 @@ export class UserController {
   }
 
   @GrpcMethod('UserService', 'FindOne')
-  async findOne(request: any, metadata: Metadata): Promise<any> {
+  async findOne(request: any, metadata: Metadata) {
     try {
       const user = await this.userService.findOne({ ...request });
 
@@ -50,11 +50,9 @@ export class UserController {
   }
 
   @GrpcMethod('UserService', 'Create')
-  async create(request: any, metadata: Metadata): Promise<any> {
-    const { data } = request;
-    console.log(data)
+  async create(request: any, metadata: Metadata) {
     try {
-      const user = await this.userService.create({ ...data });
+      const user = await this.userService.create({ ...request });
 
       return {
         successful: true,
@@ -70,12 +68,11 @@ export class UserController {
   }
 
   @GrpcMethod('UserService', 'Update')
-  async update(request: any, metadata: Metadata): Promise<any> {
-    const { id, data } = request;
-
+  async update(request: any, metadata: Metadata) {
+    const { id } = request;
     try {
-      const user = await this.userService.update(id, { ...data });
-
+      const user = await this.userService.update(id, { ...request });
+      console.log(user)
       return {
         successful: true,
         data: user,

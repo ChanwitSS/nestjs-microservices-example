@@ -24,6 +24,7 @@ message FindAllUserRequest {
   int32 page = 1;
   string sortField = 2;
   string sortDirection = 3;
+  string search = 4;
 }
 
 message FindAllUserResponse {
@@ -32,7 +33,9 @@ message FindAllUserResponse {
 }
 
 message CreateUserRequest {
-  User data = 0;
+  string email = 0;
+  string password = 1;
+  string name = 2;
 }
 
 message CreateUserResponse {
@@ -42,7 +45,9 @@ message CreateUserResponse {
 
 message UpdateUserRequest {
   string id = 0;
-  User data = 1;
+  string email = 1;
+  string password = 2;
+  string name = 3;
 }
 
 message UpdateUserResponse {
