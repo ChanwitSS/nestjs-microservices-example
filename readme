@@ -1,6 +1,0 @@
-NessJS microservices
-
-This project using NestJS to perform a microservices architecture. I separate services into small part for better performance and easies to maintanace. It's might be not perfect in every path. Just feel free and let it be your good idea to make your own.
-
-Ref
-- https://microservices.io/patterns/data/database-per-service.html
