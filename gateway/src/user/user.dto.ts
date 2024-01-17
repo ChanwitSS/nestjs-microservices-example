@@ -4,26 +4,26 @@ export class UserDto {
   @ApiProperty()
   id: string;
   @ApiProperty()
-  name: string;
+  name?: string;
   @ApiProperty()
-  email: string;
+  email?: string;
 }
 
 export class CreateUserDto extends OmitType(UserDto, ['id']) {
   @ApiProperty()
-  password: string;
+  password?: string;
 }
 export class UpdateUserDto extends CreateUserDto {}
 
 export class UserQueryDto {
   @ApiProperty({ required: false })
-  take: number;
+  take?: number;
   @ApiProperty({ required: false })
-  page: number;
+  page?: number;
   @ApiProperty({ required: false })
-  sortField: string;
+  sortField?: string;
   @ApiProperty({ required: false })
-  sortDirection: string;
+  sortDirection?: string;
   @ApiProperty({ required: false })
-  search: string;
+  search?: string;
 }

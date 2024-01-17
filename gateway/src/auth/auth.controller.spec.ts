@@ -54,8 +54,8 @@ describe('AuthController', () => {
       expect(service.login).toBeDefined();
     });
 
-    it('should call service.login', () => {
-      controller.login({ email: 'test@gmail.com', password: 'password' });
+    it('should call service.login', async () => {
+      await controller.login({ email: 'test@gmail.com', password: 'password' })
       expect(service.login).toHaveBeenCalledTimes(1);
     });
   });

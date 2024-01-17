@@ -16,7 +16,7 @@ describe('UserController', () => {
     findOne: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
-    // delete: jest.fn(),
+    findByText: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -47,7 +47,7 @@ describe('UserController', () => {
     });
 
     it('should call service.findAll', () => {
-      // controller.findAll();
+      controller.findAll({});
       expect(service.findAll).toHaveBeenCalledTimes(1);
     });
   });
@@ -65,6 +65,55 @@ describe('UserController', () => {
       const id = 'e165354e-cc07-44f4-9185-f79d39747485'
       controller.findOne(id);
       expect(service.findOne).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('#findByText', () => {
+    beforeEach(() => {
+      jest.spyOn(service, 'findByText');
+    });
+
+    it('should be defined', () => {
+      expect(service.findByText).toBeDefined();
+    });
+
+    it('should call service.findByText', () => {
+      controller.findByText('searchText');
+      expect(service.findByText).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('#create', () => {
+    beforeEach(() => {
+      jest.spyOn(service, 'create');
+    });
+
+    it('should be defined', () => {
+      expect(service.create).toBeDefined();
+    });
+
+    it('should call service.create', () => {
+      controller.create({
+        email: "test@gmail.com",
+        password: "test"
+      });
+      expect(service.create).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('#update', () => {
+    beforeEach(() => {
+      jest.spyOn(service, 'update');
+    });
+
+    it('should be defined', () => {
+      expect(service.update).toBeDefined();
+    });
+
+    it('should call service.update', () => {
+      const id = 'e165354e-cc07-44f4-9185-f79d39747485'
+      controller.update(id, { });
+      expect(service.update).toHaveBeenCalledTimes(1);
     });
   });
 });
