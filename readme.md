@@ -15,6 +15,7 @@ This project contains API gateway and microservices (only user-service for now) 
 - GRPC
 - Seqeulize 
 - Swagger
+- JWT
 - PostgreSQL
 - Docker
 
